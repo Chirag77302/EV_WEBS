@@ -9,7 +9,7 @@ import GoogleAuthLogin from "./googleauth";
 import MainPage from "./components/Main";
 import ChargerPage from './ChargerPage';
 import ListedBookings from "./components/ListedBookings";
-
+import AdminProfile from "./components/AdminProfile";
 const App = () =>{
   return (
     <div>
@@ -18,6 +18,7 @@ const App = () =>{
           <Route exact path="/admin/"><ChargerPage /></Route>
           <Route exact path="/user/login"><GoogleAuthLogin /></Route>
           <Route exact path="/admin/login"><LoginAdmin /></Route>
+          <Route exact path="/adminProfile/"><AdminProfile /></Route>
           <Route exact path="/admin/register"><Register/></Route>
           {/* <Navbr /> */}
           <Route exact path="/user/:id" render={routeProps => (<Mapp {...routeProps} />)}></Route>

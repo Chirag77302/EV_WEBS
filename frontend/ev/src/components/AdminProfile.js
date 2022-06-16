@@ -1,93 +1,46 @@
 import React from "react";
+import { useState } from "react";
 import '/node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { Form, Button } from 'react-bootstrap';
-import Menu from "./SelectorMenu";
-import { useHistory } from 'react-router-dom';
-import { useState } from "react";
-
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import{Container , Row , Col }from 'react-bootstrap'
 
-
-
 const inivals = {
-    username:"",
-    email:"",
-    password:"",
-    maxslots:"",
-    location:"",
-    state:"",
-    type:"",
-    mobile: ""
+  username:"Sample Name",
+  email:"sample@gmail.com",
+  password:"6546312",
+  maxslots:"4",
+  location:"Delhi",
+  state:"Delhi",
+  type:"Level 1",
+  mobile: "9188514"
 }
 
+function AdminProfile() {
+  const [loginData,setLoginData] = useState(
+      localStorage.getItem('StationData')
+      ? JSON.parse(localStorage.getItem('StationData'))
+      : null);
+  const [values,setvalues] = useState(inivals);
 
-const options = [
-    { value: 'Level 1', label: 'Level 1' },
-    { value: 'Level 2', label: 'Level 2' },
-    { value: 'DC Fast', label: 'DC Fast' },
-  ];
+  console.log(loginData);
 
-function Register(){
-    const [loginData,setLoginData] = useState(
-        localStorage.getItem('StationData')
-        ? JSON.parse(localStorage.getItem('StationData'))
-        : null);
-    const [values,setvalues] = useState(inivals);
-    const history = useHistory();
-
-    const registerHandler = async(e) =>{
-          e.preventDefault();
-          console.log('entered register handler');
-          console.log(values);
-          const res = await fetch('/api/register/', {
-            method: 'POST',
-            body: JSON.stringify({
-              username:values.username,
-              email: values.email ,
-              password:values.password,
-              maxslots:values.maxslots,
-              location:values.location,
-              state:values.state,
-              type:values.type
-            }),
-            headers: {
-                'Content-Type': 'application/json',
-              }
-          });
-          console.log(res);
-          console.log('ended fetch request');
-          const data = await res.json();
-          setLoginData(data);
-
-          localStorage.setItem('StationData', JSON.stringify(data));
-            console.log('set the local storage:done ');
-            console.log('localstorgae is : ',localStorage.getItem('StationData'));
-
-            //
-            history.push(`/admin/`);
-    }
-
-    const handleChange = (evt) => {
-
-        const { name, value } = evt.target;
-        // console.log(evt);
-            setvalues({
-            ...values,
-            [name]: value,
-            });
-    }
-    const mobileChange = (evt) => {
-        setvalues({
-            mobile : evt
-        })
-    }
-
-
-    return(
-        <div className="container mt-3" >
-          <Form onSubmit={registerHandler} className="col-12">
+  const handleChange = (evt) => {
+    const { name, value } = evt.target;
+      setvalues({
+        ...values,
+        [name]: value,
+        });
+  }
+  const mobileChange = (evt) => {
+    setvalues({
+        mobile : evt
+    })
+}
+    return (
+      <div className="container mt-3" >
+          <Form  className="col-12 " >
               <Container>
                 <Row>
                   <Col>
@@ -145,7 +98,6 @@ function Register(){
                         name ="mobile"
                         value={values.mobile}
                         onChange={mobileChange}
-                        style = {{width : "inherit"}}
                         />
                 </Form.Group>
 
@@ -165,13 +117,13 @@ function Register(){
                 </Row> 
 
                 <Row className ="justify-content-md-center mt-3" >
-                  <Button variant="primary" type="submit" style = {{width : "30%" }}>Submit</Button>
+                  <Button variant="primary" type="submit" style = {{width : "30%" }}>EDIT</Button>
                 </Row>
               </Container>
                 
             </Form>
         </div>
     )
-}
 
-export default Register;
+}
+export default AdminProfile;

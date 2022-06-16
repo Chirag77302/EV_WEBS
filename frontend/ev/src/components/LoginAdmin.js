@@ -30,7 +30,7 @@ function LoginAdmin(){
             setLoginData(data);
             localStorage.setItem('StationData', JSON.stringify(data));
 
-            history.push(`/admin/`);
+            history.push(`/adminProfile/`);
         }
 
         const handleChange = (evt) =>{
