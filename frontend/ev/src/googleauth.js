@@ -3,6 +3,7 @@ import { GoogleLogin } from 'react-google-login';
 import { useState } from 'react';
 import { gapi } from 'gapi-script';
 import {useHistory} from 'react-router-dom';
+import { FcGoogle } from 'react-icons/fa';
 
 function GoogleAuthLogin() {
   useEffect(() => {
@@ -25,7 +26,7 @@ function GoogleAuthLogin() {
 
     const handleFailure = (result) => {
       console.log("failure is : ",result);
-        alert(result);
+      if(result.error !== "popup_closed_by_user")alert(result);
     }
 
     const handleLogin = async (googleData) => {
@@ -66,6 +67,7 @@ function GoogleAuthLogin() {
               buttonText="Sign in with Google"
               onSuccess={handleLogin}
               onFailure={handleFailure}
+              theme="dark"
               cookiePolicy={'single_host_origin'}
             ></GoogleLogin>
            )}
