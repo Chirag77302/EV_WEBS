@@ -18,8 +18,8 @@ function LoginAdmin(){
             const res = await fetch('/api/station/login', {
                 method: 'POST',
                 body: JSON.stringify({
-                email: this.state.email ,
-                password:this.state.password
+                email: values.email ,
+                password:values.password
                 }),
                 headers: {
                 'Content-Type': 'application/json',
@@ -30,7 +30,7 @@ function LoginAdmin(){
             setLoginData(data);
             localStorage.setItem('StationData', JSON.stringify(data));
 
-            if(loginData!==null) history.push(`/admin/`);
+            history.push(`/admin/`);
         }
 
         const handleChange = (evt) =>{

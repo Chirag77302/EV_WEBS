@@ -5,6 +5,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import './Map.css';
 // import { Nav,Navbar} from 'react-bootstrap';
 import Menu from './SelectorMenu';
+import axios from 'axios';
 
 mapboxgl.accessToken='pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA';
 // Sample data 
@@ -36,8 +37,7 @@ class Mapp extends Component{
 		this.state = {
 			lng: 77.260071,
 			lat: 28.543140,
-			zoom: 20,
-			dz:[]
+			zoom: 16,
 		}
 		this.mapContainer = React.createRef();
 	}
@@ -51,19 +51,14 @@ class Mapp extends Component{
 			zoom: this.state.zoom
 		})
 
-		// d = await axios.get('/api/getstations/');
-		// console.log('data got is',d.data);
-		// this.setState({
-		// 	dz:d.data.map((p)=>(p))
-		// })
-		// console.log(this.state.dz);
+		const d = await axios.get('/api/getstations/');
 
-		data.forEach((location) => {
-			console.log(location)
+		d.data.forEach((location) => {
+			console.log('added : ', location)
 			var marker = new mapboxgl.Marker()
-							.setLngLat(location.coordinates)
+							.setLngLat(location.geometry.coordinates)
 							.setPopup(new mapboxgl.Popup({ offset: 30 })
-							.setHTML('<h4>' + location.city + '</h4>' + location.location))  //add a booking button here and it's functionality
+							.setHTML('<h4>' + location.username + '</h4>' + location.location))  //add a booking button here and it's functionality
 							.addTo(map);
 
 		})

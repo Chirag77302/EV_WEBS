@@ -163,31 +163,51 @@ app.post('/api/user/bookings',async(req,res)=>{
     const {email,username} = req.body;
     const user = await User.findOne({email:email});
     console.log('user is : ',user);
-    // res.send("high");
+
     if(user){
 
-            const cs = await Charger.find({});
+            let cs = await Charger.find({});
+            // let us = await UserBooks.find({});
             // console.log('chargers is : ',cs);
             let avail = [];
             let non_avail = [];
-            // console.log(user.bookings);
+            // console.log( user.bookings );
             if(user.bookings.length === 0){
                 avail.push(...cs);
             }else {
+               
                 for(var i=0;i<user.bookings.length;i++){
                     var z = user.bookings[i];
-                    var book = UserBooks.findById(z);
-                    var st = Charger.findById(book.station_id);
-                    cs = cs.filter(s => s._id!=st._id);
-                    non_avail = [...non_avail,st];
+                    // console.log('book id is : ', z._id);
+                    var book = await UserBooks.findOne({_id:z._id});             
+                    // console.log('booking is : ',book);
+                    var st = await Charger.findOne({_id:book.station_id});
+                    // console.log('station is : ',st);
+    
+                    if(non_avail)non_avail = [...non_avail,st];
+                    else non_avail = [st];
                 }
-                avail.push(...cs);
-                // non_avail = cs.filter(s => user.bookings.station_id.includes(s._id));
-                // avail = cs.filter(s => !user.bookings.station_id.includes(s._id));
+
+                // console.log('size of not_avail: ',non_avail.length);
+                for(var i=0;i<cs.length;i++){
+                    console.log('station is : ',cs[i], ' includes status : ',non_avail.includes(cs[i]) );
+                    var inc = false;
+                    for(var j=0;j<non_avail.length;j++){
+                        if(non_avail[j].email === cs[i].email){
+                            inc = true;
+                        }
+                    }
+                    if(inc === false){
+                        if(avail.length === 0)avail = [cs[i]];
+                        else avail.push(cs[i]);
+                    }
+                }
+
             }
 
-            // console.log('avail is : ', avail);
-            // console.log('non_avail is : ', non_avail);
+            console.log('avail is : ', avail);
+            console.log('non_avail is : ', non_avail);
+            
             res.status(201).json({
                 available:[...avail],
                 not_available: [...non_avail]
@@ -200,9 +220,10 @@ app.post('/api/user/bookings',async(req,res)=>{
 
 app.post('/api/user/update/',async(req,res) => {
     const {email,id_extract} = req.body;
-    const user = await User.find({email:email});
-    const station = await Charger.find({_id:id_extract});
+    const user = await User.findOne({email:email});
+    const station = await Charger.findOne({_id:id_extract});
     console.log('user is :', user);
+    console.log('station is :', station);
 
     if(user){
         let new_entry = new UserBooks({
@@ -210,22 +231,39 @@ app.post('/api/user/update/',async(req,res) => {
             Accept:false,
             Decline:false
         });
-        console.log(user.bookings);
+        // console.log(user.bookings);
         
         if(user.bookings){
-            user.bookings.push(new_entry._id);
+            user.bookings.push(new_entry);
         }else{
-            user.bookings = [new_entry._id];
+            user.bookings = [new_entry];
         }
-        if(station.slots<station.maxSlots){
-            station.slots = station.slots + 1;
+        // console.log('slots are:',station.slots);
+        if(station.slots){
+            if(station.slots<station.maxSlots){
+                station.slots = station.slots + 1;
+            }
+        }else{
+            station.slots = 1;
         }
 
+        // console.log('the user bookings are:',user.bookings);
+        
+        // console.log('username are:',station.username);
+        // console.log('email are:',station.email);
+        // console.log('location are:',station.location);
+        // console.log('maxSlots are:',station.maxSlots);
+        // console.log('slots are:',station.slots);
+        // console.log('state are:',station.state);
+        // console.log('password are:',station.password);
+        // console.log('geometry are:',station.geometry);
+        // console.log('type are:',station.type);
+        
         await station.save();
         await new_entry.save();
         const nuser = await user.save();
-       
         nuser === user; // 
+
         res.status(201).json({
             userif:user
         });
@@ -234,6 +272,9 @@ app.post('/api/user/update/',async(req,res) => {
         throw new error('unable to update');
     }
 })
+
+
+
 
 // get bookings of a particular user
 app.post('/api/users/getbookings',async(req,res)=>{

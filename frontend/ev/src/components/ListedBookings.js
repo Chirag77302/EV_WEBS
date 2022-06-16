@@ -59,15 +59,14 @@ class ListedBookings extends Component{
             console.log('res is : ', d);
             await this.setState({
                 avail:[...d.available],
-                not_avail:[]
-            });
-            console.log(this.state);
+                not_avail:[...d.not_available]
+            },console.log(this.state));
         }
 
     }
 
-    printunav(d){
-        console.log('d is : ',d);
+    printunav(){
+        console.log('state is : ',this.state);
     }
 
     // componentDidUpdate(station,id){
@@ -87,9 +86,9 @@ class ListedBookings extends Component{
         console.log('id extracted is : ',id_extract);
         // console.log('state is : ',this.state.avail);
         let station_extract = await this.state.avail.filter(st => st._id === id_extract);
-        console.log("station is : ",station_extract);
+        console.log("station is : ",station_extract[0]);
     
-        const obj = JSON.parse(localStorage.getItem('loginData'));
+        const obj = await JSON.parse(localStorage.getItem('loginData'));
         const res = await fetch('/api/user/update/', {
                         method: 'POST',
                         body: JSON.stringify({
@@ -100,11 +99,12 @@ class ListedBookings extends Component{
                             'Content-Type': 'application/json',
                         }
                     });
-        console.log(res.json());
-        this.setState({
-            avail:this.state.avail.filter(st => st.email !== station_extract.email),
-            not_avail:[...this.state.not_avail,station_extract]
-        });
+        let d = await res.json();
+        console.log(d);
+        await this.setState({
+            avail: this.state.avail.filter(st => st.email !== station_extract[0].email),
+            not_avail:[...this.state.not_avail,station_extract[0]]
+        }, this.printunav());
 
     }
 
