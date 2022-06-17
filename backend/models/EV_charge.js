@@ -14,7 +14,8 @@ const ChargerSchema = mongoose.Schema({
         type: {type: String, enum: ['Point'],required: true},
         coordinates: {type: [Number],required: true}
       },
-    type:{type:String,required:true}
+    type:{type:String,required:true},
+    phone:{type:String,required:true}
 });
 
 ChargerSchema.methods.matchPassword = async function (enteredPassword) {

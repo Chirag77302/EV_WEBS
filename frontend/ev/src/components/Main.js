@@ -10,7 +10,9 @@ function MainPage(){
     const history = useHistory();
 
     const Redirectuser =  ()=> {
-        history.push('/user/login');
+        const d = JSON.parse(localStorage.getItem('loginData'));
+        if(d)history.push(`/user/${d._id}`);
+        else history.push('/user/login');
     }
 
     const Redirectstation = ()=> {

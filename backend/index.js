@@ -25,13 +25,9 @@ const client = new OAuth2Client(process.env.REACT_APP_GOOGLE_CLIENT_ID);
 
 const app = express();
 app.use(express.json());
-// app.use(passport.initialize());
-// app.use(passport.session());
 
 app.get('/api/', async (req,res)=>{
-    // res.send("api connected");
     const al = await User.find({});
-    console.log(al);
     res.send(al);
 });
 
@@ -43,6 +39,7 @@ app.post('/api/auth/google', async (req, res) => {
       idToken: token,
       audience: process.env.REACT_APP_GOOGLE_CLIENT_ID,
     });
+    console.log(ticket.getPayload());
     const { name, email } = ticket.getPayload();
     const founduser = await User.findOne({email:email});
     // console.log("founduser is ",founduser);
@@ -73,7 +70,8 @@ app.post('/api/auth/google', async (req, res) => {
 app.post('/api/station/login',async(req,res)=>{
     const {email,password} = req.body;
     const foundstation = await Charger.findOne({email:email});
-    console.log('wohoo it is :', foundstation);
+    // console.log('wohoo it is :', foundstation);
+
     if(foundstation && (await foundstation.matchPassword(password))){
         const token = generateToken(foundstation._id);
         res.cookie('jwt', token, {
@@ -86,11 +84,15 @@ app.post('/api/station/login',async(req,res)=>{
         res.status(201);
         res.json({
             _id:foundstation._id,
+            username:foundstation.username,
             location:foundstation.location,
             email:foundstation.email,
             slots:foundstation.slots,
-            maxslots:foundstation.maxslots,
+            maxSlots:foundstation.maxSlots,
+            geometry:foundstation.geometry,
             state:foundstation.state,
+            phone:foundstation.phone,
+            type:foundstation.type,
             token:token        
         });
     }else{
@@ -103,16 +105,16 @@ app.post('/api/station/login',async(req,res)=>{
 app.post('/api/register/', async(req,res)=>{
 
         console.log('req body is : ', req.body);
-        const {username,location,email,maxslots,state,password,type} = req.body;
+        const {username,location,email,maxslots,state,password,type,phone} = req.body;
         const geoData = await geocoder.forwardGeocode({
             query:location,
             limit:1
         }).send();
 
-        console.log('geodata is : ', geoData.body.features[0].geometry);
+        // console.log('geodata is : ', geoData.body.features[0].geometry);
 
         const foundstation = await Charger.findOne({email:email});
-        console.log('foundstation is : ',foundstation);
+        // console.log('foundstation is : ',foundstation);
         if(foundstation){
             res.status(400);
             throw new Error('User Email already Exists');
@@ -126,13 +128,14 @@ app.post('/api/register/', async(req,res)=>{
             state,
             password,
             type,
-            geometry:geoData.body.features[0].geometry
+            geometry:geoData.body.features[0].geometry,
+            phone
         })
         // console.log(station);
 
         if(station){
             // add saving scene here;
-            station.save();
+            await station.save();
             res.status(201).json({
                 _id:station._id,
                 username:station.username,
@@ -143,6 +146,7 @@ app.post('/api/register/', async(req,res)=>{
                 state:station.state,
                 geometry:station.geometry,
                 type:station.type,
+                phone:station.phone,
                 token:generateToken(station._id)
             });
         }else{
@@ -153,7 +157,7 @@ app.post('/api/register/', async(req,res)=>{
 
 app.get('/api/getstations/',async(req,res)=> {
     const dd = await Charger.find({});
-    console.log(dd);
+    // console.log(dd);
     res.status(201).json(dd);
 })
 
@@ -162,7 +166,7 @@ app.post('/api/user/bookings',async(req,res)=>{
 
     const {email,username} = req.body;
     const user = await User.findOne({email:email});
-    console.log('user is : ',user);
+    // console.log('user is : ',user);
 
     if(user){
 
@@ -205,8 +209,8 @@ app.post('/api/user/bookings',async(req,res)=>{
 
             }
 
-            console.log('avail is : ', avail);
-            console.log('non_avail is : ', non_avail);
+            // console.log('avail is : ', avail);
+            // console.log('non_avail is : ', non_avail);
             
             res.status(201).json({
                 available:[...avail],
@@ -222,8 +226,8 @@ app.post('/api/user/update/',async(req,res) => {
     const {email,id_extract} = req.body;
     const user = await User.findOne({email:email});
     const station = await Charger.findOne({_id:id_extract});
-    console.log('user is :', user);
-    console.log('station is :', station);
+    // console.log('user is :', user);
+    // console.log('station is :', station);
 
     if(user){
         let new_entry = new UserBooks({
@@ -246,18 +250,6 @@ app.post('/api/user/update/',async(req,res) => {
         }else{
             station.slots = 1;
         }
-
-        // console.log('the user bookings are:',user.bookings);
-        
-        // console.log('username are:',station.username);
-        // console.log('email are:',station.email);
-        // console.log('location are:',station.location);
-        // console.log('maxSlots are:',station.maxSlots);
-        // console.log('slots are:',station.slots);
-        // console.log('state are:',station.state);
-        // console.log('password are:',station.password);
-        // console.log('geometry are:',station.geometry);
-        // console.log('type are:',station.type);
         
         await station.save();
         await new_entry.save();
@@ -274,24 +266,81 @@ app.post('/api/user/update/',async(req,res) => {
 })
 
 
-
-
-// get bookings of a particular user
+// get notifications of a particular user
 app.post('/api/users/getbookings',async(req,res)=>{
+    
     const {email} = req.body;
-    const u = await User.findOne({email:email});
-    let to_send = [];
-    for(var i=0;i<u.bookings.length;i++){
-        var book = UserBooks.findById(u.bookings[i]);
-        to_send = [...to_send,book];
+    const user = await User.findOne({email:email});
+    // console.log('user is : ',user);
+
+    if(user){
+        let to_send = [];
+        for(var i=0;i<user.bookings.length;i++){
+            var z = user.bookings[i];
+            var book = await UserBooks.findOne({_id:z._id});             
+            // console.log('booking is : ',book);
+            var st = await Charger.findOne({_id:book.station_id});
+            // console.log('station is : ',st);
+    
+            if(to_send)to_send = [...to_send,st];
+            else to_send = [st];
+        }
+    
+        res.status(201).json({
+            bookings:to_send
+        });
+    }else{
+        res.status(404);
+        throw new error('User not logged in');
     }
-    res.status(201).json({
-        bookings:to_send
-    });
+    
 })
 
 
 // accept/decline 
+
+app.post('/api/users/bookingsupdate',async(req,res) => {
+    const {email,id_extract} = req.body;
+    const user = await User.findOne({email:email});
+    const station = await Charger.findOne({_id:id_extract});
+    // console.log('user is :', user);
+    // console.log('station is :', station);
+
+    if(user){
+        if(station.slots>0){
+            station.slots = station.slots - 1;
+        }
+
+        let to_delete;
+        for(var i=0;i<user.bookings.length;i++){
+            var z = user.bookings[i];
+            var book = await UserBooks.findOne({_id:z._id}); 
+            console.log('booking is : ',book);
+            const r = await book.station_id.equals(station._id);
+            console.log('result is : ',r );
+            if(r){
+                to_delete = book;
+            }
+        }
+
+        // console.log('id to delete is : ',to_delete);
+        await User.findByIdAndUpdate(user._id, { $pull: { bookings: to_delete._id } });
+        // user.bookings =  await user.bookings.filter(b => !(to_delete._id.equals(b._id)) );
+        await UserBooks.deleteOne({_id:to_delete._id});
+
+        await station.save();
+        await user.save()
+       
+        res.status(201).json({
+            userif:user
+        });
+
+    }else{
+        res.status(404);
+        throw new error('unable to update');
+    }
+
+})
 
 app.listen(3000,()=>{
     console.log('server connected on port 3000');
