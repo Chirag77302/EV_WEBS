@@ -1,9 +1,12 @@
 const express = require('express');
+if(process.env.NODE_ENV !== "production"){
+    require('dotenv').config();
+}
+  
 const mongoose = require('mongoose');
-const dotenv = require("dotenv"); // Define the dotenv package
-dotenv.config(); 
+// const dotenv = require("dotenv"); // Define the dotenv package
+// dotenv.config(); 
 const Charger = require('./models/EV_charge.js');
-const dbUrl = 'mongodb://localhost:27017/Electric';
 const { OAuth2Client } = require('google-auth-library');
 const User = require('./models/User.js');
 const generateToken = require('./utils/token.js');
@@ -11,6 +14,7 @@ const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 const mapBoxToken = process.env.REACT_APP_MAPBOX_TOKEN;
 const geocoder = mbxGeocoding({accessToken:mapBoxToken});
 const UserBooks = require('./models/UserBooks.js');
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/Electric';
 
 mongoose.connect(dbUrl, {
     useNewUrlParser: true,
@@ -177,7 +181,12 @@ app.post('/api/user/bookings',async(req,res)=>{
             let non_avail = [];
             // console.log( user.bookings );
             if(user.bookings.length === 0){
-                avail.push(...cs);
+                for(var i=0;i<cs.length;i++){
+                    if(cs[i].slots < cs[i].maxSlots){
+                        if(avail)avail.push(cs[i]);
+                        else avail = [cs[i]];
+                    }
+                }
             }else {
                
                 for(var i=0;i<user.bookings.length;i++){
@@ -201,7 +210,7 @@ app.post('/api/user/bookings',async(req,res)=>{
                             inc = true;
                         }
                     }
-                    if(inc === false){
+                    if(inc === false && cs[i].slots < cs[i].maxSlots){
                         if(avail.length === 0)avail = [cs[i]];
                         else avail.push(cs[i]);
                     }
