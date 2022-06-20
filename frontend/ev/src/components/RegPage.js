@@ -35,6 +35,10 @@ function Register(){
         : null);
     const [values,setvalues] = useState(inivals);
     const history = useHistory();
+    const d = JSON.parse(localStorage.getItem('StationData'));
+    if(d){
+        history.push(`/admin/${d._id}`);
+    }
 
     const registerHandler = async(e) =>{
           e.preventDefault();
@@ -75,12 +79,6 @@ function Register(){
             });
     }
 
-    // const mobileChange = (evt) => {
-    //     setvalues({
-    //         phone : evt
-    //     })
-    // }
-
     return(
         <div style={{height:'700px'}}>
 			<Container fluid style={{height:'inherit'}}>
@@ -97,8 +95,8 @@ function Register(){
                                     <Form.Control name="email" type="email" placeholder="Enter Email" value={values.email} onChange={handleChange} required={true} />
                                 </Form.Group>
                                 <Form.Group className="mb-1" controlId="formBasicNumber">
-                                    <Form.Label>Phone Number (With country code) </Form.Label>
-                                    <Form.Control name="phone" type="text" placeholder="Enter Phone Number" value={values.phone} onChange={handleChange} required={true} />
+                                    <Form.Label>Phone Number <span style={{fontSize:'8px'}}> (With country code) </span> </Form.Label>
+                                    <Form.Control name="phone" type="text" placeholder="Phone Number" value={values.phone} onChange={handleChange} required={true} />
                                 </Form.Group>
                                 <Form.Group className="mb-1" controlId="formBasicPassword">
                                     <Form.Label>Password</Form.Label>

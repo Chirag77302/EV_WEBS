@@ -14,7 +14,7 @@ const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 const mapBoxToken = process.env.REACT_APP_MAPBOX_TOKEN;
 const geocoder = mbxGeocoding({accessToken:mapBoxToken});
 const UserBooks = require('./models/UserBooks.js');
-const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/Electric';
+const dbUrl = 'mongodb://localhost:27017/Electric' ;
 
 mongoose.connect(dbUrl, {
     useNewUrlParser: true,
@@ -30,9 +30,9 @@ const client = new OAuth2Client(process.env.REACT_APP_GOOGLE_CLIENT_ID);
 const app = express();
 app.use(express.json());
 
-app.get('/api/', async (req,res)=>{
-    const al = await User.find({});
-    res.send(al);
+app.get('/api/',(req,res)=>{
+    // const al = await User.find({});
+    res.send('api connected');
 });
 
 // user login / register 
@@ -351,6 +351,7 @@ app.post('/api/users/bookingsupdate',async(req,res) => {
 
 })
 
-app.listen(3000,()=>{
-    console.log('server connected on port 3000');
+const port = 3000;
+app.listen(port,()=>{
+    console.log(`server connected on port ${port}`);
 })

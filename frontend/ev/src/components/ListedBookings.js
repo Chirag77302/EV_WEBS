@@ -7,6 +7,8 @@ import { TbRecharging } from "react-icons/tb";
 import { IoMailOpenOutline,IoLogoWhatsapp } from "react-icons/io5";
 import { MdEvStation } from "react-icons/md";
 
+const link = process.env.REACT_APP_BACKEND_API;
+
 class ListedBookings extends Component{
 
     constructor(props){
@@ -17,12 +19,13 @@ class ListedBookings extends Component{
         }
         this.BookAStation = this.BookAStation.bind(this);
         this.printunav = this.printunav.bind(this);
+        this.goPreviousPage = this.goPreviousPage.bind(this);
     }
 
     async componentDidMount(){
         
         const obj = await JSON.parse(localStorage.getItem('loginData'));
-        console.log('obj is : ',obj);
+        // console.log('obj is : ',obj);
         if(obj){
             const res = await fetch('/api/user/bookings', {
                 method: 'POST',
@@ -36,7 +39,7 @@ class ListedBookings extends Component{
             });
             let d = await res.json();
 
-            console.log('res is : ', d);
+            // console.log('res is : ', d);
             await this.setState({
                 avail:[...d.available],
                 not_avail:[...d.not_available]
@@ -47,6 +50,11 @@ class ListedBookings extends Component{
 
     printunav(){
         console.log('state is : ',this.state);
+    }
+
+    goPreviousPage(){
+        const d = JSON.parse(localStorage.getItem('loginData'));
+        window.location.replace(`/user/${d._id}`);
     }
 
     async BookAStation(e){
@@ -81,18 +89,18 @@ class ListedBookings extends Component{
     render(){
         return (
             <div className="head">
-                <div sm={12} className="d-flex justify-content-center"><h1>BOOKINGS</h1></div>
+                <div sm={12} className="d-flex justify-content-center"><h1><strong>BOOKINGS</strong></h1></div>
                     <Container fluid>
                         <Row>
                             <Col sm={1}></Col>
                             <Col sm={10}>
                                 <h4>Available Bookings</h4>
 
-                                {this.state.avail.length === 0 ?<div className="card mb-3 border d-flex justify-content-center align-items-center">
+                                {this.state.avail.length === 0 ?<div className="card mb-3 border d-flex justify-content-center align-items-center" style={{borderRadius:'0.75rem'}} >
                                     <h4 className="text-primary p-2"> No Stations Available </h4>
                                 </div>  : this.state.avail.map(station => {
                                     return (
-                                        <div className="card mb-3 border">
+                                        <div className="card mb-3 border" style={{borderRadius:'0.75rem'}} >
                                             <div className="row">
                                                 <div className="col-md-3 d-flex justify-content-center align-items-center">
                                                     <MdEvStation className="m-1 border" style={{fontSize: '200px',color:"#198754"}}/>
@@ -123,11 +131,12 @@ class ListedBookings extends Component{
                                 })}
                             
                                 <h4>Current Bookings</h4>
-                                {this.state.not_avail.length === 0 ? <div className="card mb-3 border d-flex justify-content-center align-items-center">
+                                {this.state.not_avail.length === 0 ? <div className="card mb-3 border d-flex justify-content-center align-items-center" style={{borderRadius:'0.75rem'}} >
                                     <h4 className="text-primary p-2"> No Bookings Added </h4>
+                                    <button type="button" className="btn btn-outline-primary m-1" onClick={this.goPreviousPage}  >Go Back </button>
                                 </div>  : this.state.not_avail.map(station => {
                                     return (
-                                        <div className="card mb-3 border">
+                                        <div className="card mb-3 border" style={{borderRadius:'0.75rem'}} >
                                             <div className="row">
                                                 <div className="col-md-3 d-flex justify-content-center align-items-center">
                                                     <MdEvStation className="m-1 border" style={{fontSize: '200px',color:"#198754"}}/>
@@ -150,6 +159,7 @@ class ListedBookings extends Component{
                                                     </div>
                                                 </div>
                                             </div>
+                                            <button type="button" className="btn btn-outline-primary m-1" onClick={this.goPreviousPage}  >Go Back </button>
                                         </div>
                                     )
                                 })}
