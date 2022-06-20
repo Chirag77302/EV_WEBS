@@ -1,13 +1,13 @@
 .map-container { 
-    position: absolute;
-    width: 50%;
-    height : 500px;
-    top: 20%;
-    bottom: 10%;
-    left: 25%;
-    right: 20%;
+    /* position: absolute; */
+    width: 100%;
+    height : 90%;
+    /* top: 20%; */
+    /* bottom: 10%; */
+    /* left: 25%; */
+    /* right: 20%; */
 }
-  
+/*   
   .sidebarStyle {
     display: inline-block;
     position: absolute;
@@ -33,4 +33,4 @@
     top: 12.2%;
     left: 25%;
     right: 20%;
-  }
+  } */

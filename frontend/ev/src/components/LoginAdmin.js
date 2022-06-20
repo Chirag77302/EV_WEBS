@@ -15,6 +15,10 @@ function LoginAdmin(){
         const [loginData,setLoginData] = useState();
         const [values,setvalues] = useState(inivals);
         const history = useHistory();
+        const d = JSON.parse(localStorage.getItem('StationData'));
+        if(d){
+            history.push(`/admin/${d._id}`);
+        }
 
         const loginHandler = async(e) =>{
             e.preventDefault();

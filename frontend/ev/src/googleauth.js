@@ -26,6 +26,11 @@ function GoogleAuthLogin() {
     ? JSON.parse(localStorage.getItem('loginData'))
     : null);
   const history = useHistory();
+  const d = JSON.parse(localStorage.getItem('loginData'));
+
+  if(d){
+      history.push(`/user/${d._id}`);
+  }
 
     const handleFailure = (result) => {
       console.log("failure is : ",result);

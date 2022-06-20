@@ -1,0 +1,19 @@
+.icon_style{
+    font-size: 50px;
+    color: white;
+    margin: 5px;
+}
+
+.icon_box{
+    background-color: #57B33E;
+    border-radius: 5px;
+}
+
+.icon_box:hover {
+    background-color: #253745;
+    transition: 0.5s;
+}
+/* 
+.content{
+    margin-bottom: 10px;
+} */

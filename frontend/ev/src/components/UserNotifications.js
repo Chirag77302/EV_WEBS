@@ -16,6 +16,7 @@ class UserNotifications extends Component{
         }
         this.handleStation = this.handleStation.bind(this);
         this.printunav = this.printunav.bind(this);
+        this.goPreviousPage = this.goPreviousPage.bind(this);
     }
 
     async componentDidMount(){
@@ -52,6 +53,10 @@ class UserNotifications extends Component{
         console.log('state is : ',this.state);
     }
 
+    goPreviousPage(){
+        const d = JSON.parse(localStorage.getItem('loginData'));
+        window.location.replace(`/user/${d._id}`);
+    }
    
     async handleStation(e){
         
@@ -84,17 +89,18 @@ class UserNotifications extends Component{
     render(){
         return (
             <div className="head">
-                <div sm={12} className="d-flex justify-content-center"><h1>Bookings</h1></div>
+                <div sm={12} className="d-flex justify-content-center"><h1><strong>Bookings</strong></h1></div>
                     <Container>
                         <Row sm={12}>
                             <Col sm={1}></Col>
                             <Col sm={10}>
-                                <h3>Available Bookings</h3>
-                                {this.state.avail.length === 0 ? <div className="card mb-3 border d-flex justify-content-center align-items-center">
+                                <h4>Available Bookings</h4>
+                                {this.state.avail.length === 0 ? <div className="card mb-3 border d-flex justify-content-center align-items-center" style={{borderRadius:'0.75rem'}} >
                                     <h4 className="text-primary p-2"> No Pending Bookings </h4>
+                                    <button type="button" className="btn btn-outline-primary m-1" onClick={this.goPreviousPage}  >Go Back </button>
                                  </div> : this.state.avail.map(station => {
                                     return (
-                                        <div className="card mb-3 border">
+                                        <div className="card mb-3 border" style={{borderRadius:'0.75rem'}} >
                                             <div className="row">
                                                 <div className="col-md-3 d-flex justify-content-center align-items-center">
                                                     <MdEvStation className="m-1 border" style={{fontSize: '200px',color:"#198754"}}/>
@@ -121,6 +127,7 @@ class UserNotifications extends Component{
                                                     </div>
                                                 </div>
                                             </div>
+                                            <button type="button" className="btn btn-outline-primary m-1" onClick={this.goPreviousPage}  >Go Back </button>
                                         </div>
                                         
                                     )
