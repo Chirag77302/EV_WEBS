@@ -1,11 +1,14 @@
 import React, { Component } from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import Button from 'react-bootstrap/Button';
+// import Button from 'react-bootstrap/Button';
 import { BiPhoneCall } from "react-icons/bi";
 import './ListedBookings.css'; 
 import { TbRecharging } from "react-icons/tb";
-import { IoMailOpenOutline,IoLogoWhatsapp } from "react-icons/io5";
+import { IoMailOpenOutline } from "react-icons/io5";
 import { MdEvStation } from "react-icons/md";
+import { withRouter } from "react-router";
+
+const link = process.env.REACT_APP_BACKEND_API;
 
 class UserNotifications extends Component{
 
@@ -13,18 +16,20 @@ class UserNotifications extends Component{
         super(props);
         this.state = {
             avail:[],
+
         }
         this.handleStation = this.handleStation.bind(this);
         this.printunav = this.printunav.bind(this);
         this.goPreviousPage = this.goPreviousPage.bind(this);
     }
-
+    
+    // const { match, location, history } = this.props;
     async componentDidMount(){
         
         const obj = await JSON.parse(localStorage.getItem('loginData'));
         console.log('obj is : ',obj);
         if(obj){
-            const res = await fetch('/api/users/getbookings', {
+            const res = await fetch(link+'/api/users/getbookings', {
                 method: 'POST',
                 body: JSON.stringify({
                   email: obj.email
@@ -54,8 +59,9 @@ class UserNotifications extends Component{
     }
 
     goPreviousPage(){
+        console.log("aa gye yahan pr");
         const d = JSON.parse(localStorage.getItem('loginData'));
-        window.location.replace(`/user/${d._id}`);
+        this.props.history.push(`/user/${d._id}`);
     }
    
     async handleStation(e){
@@ -68,7 +74,7 @@ class UserNotifications extends Component{
         console.log("station is : ",station_extract[0]);
     
         const obj = await JSON.parse(localStorage.getItem('loginData'));
-        const res = await fetch('/api/users/bookingsupdate', {
+        const res = await fetch(link+'/api/users/bookingsupdate', {
                         method: 'POST',
                         body: JSON.stringify({
                             email: obj.email,
@@ -142,4 +148,4 @@ class UserNotifications extends Component{
 
 }
 
-export default UserNotifications;
+export default withRouter(UserNotifications);
