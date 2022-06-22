@@ -7,6 +7,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 
+const link = process.env.REACT_APP_BACKEND_API;
 
 function GoogleAuthLogin() {
   useEffect(() => {
@@ -40,7 +41,7 @@ function GoogleAuthLogin() {
     const handleLogin = async (googleData) => {
         console.log(googleData);
         console.log(googleData.tokenId);
-        const res = await fetch('/api/auth/google', {
+        const res = await fetch(link+'/api/auth/google', {
             method: 'POST',
             body: JSON.stringify({
               token: googleData.tokenId,

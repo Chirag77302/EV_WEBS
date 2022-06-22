@@ -10,6 +10,7 @@ const inivals = {
     email:"",
     password:""
 }
+const link = process.env.REACT_APP_BACKEND_API;
 
 function LoginAdmin(){
         const [loginData,setLoginData] = useState();
@@ -22,7 +23,7 @@ function LoginAdmin(){
 
         const loginHandler = async(e) =>{
             e.preventDefault();
-            const res = await fetch('/api/station/login', {
+            const res = await fetch(link+'/api/station/login', {
                 method: 'POST',
                 body: JSON.stringify({
                 email: values.email ,

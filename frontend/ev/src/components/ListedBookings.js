@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import { Container, Row,Col } from "react-bootstrap";
-import Button from 'react-bootstrap/Button';
+// import Button from 'react-bootstrap/Button';
 import { BiPhoneCall } from "react-icons/bi";
 import './ListedBookings.css'; 
 import { TbRecharging } from "react-icons/tb";
-import { IoMailOpenOutline,IoLogoWhatsapp } from "react-icons/io5";
+import { IoMailOpenOutline} from "react-icons/io5";
 import { MdEvStation } from "react-icons/md";
+import { withRouter } from "react-router";
 
 const link = process.env.REACT_APP_BACKEND_API;
 
@@ -27,7 +28,7 @@ class ListedBookings extends Component{
         const obj = await JSON.parse(localStorage.getItem('loginData'));
         // console.log('obj is : ',obj);
         if(obj){
-            const res = await fetch('/api/user/bookings', {
+            const res = await fetch(link+'/api/user/bookings', {
                 method: 'POST',
                 body: JSON.stringify({
                   username:obj.username,
@@ -53,8 +54,9 @@ class ListedBookings extends Component{
     }
 
     goPreviousPage(){
+        console.log("aa gye yahan pr");
         const d = JSON.parse(localStorage.getItem('loginData'));
-        window.location.replace(`/user/${d._id}`);
+        this.props.history.push(`/user/${d._id}`);
     }
 
     async BookAStation(e){
@@ -67,7 +69,7 @@ class ListedBookings extends Component{
         console.log("station is : ",station_extract[0]);
     
         const obj = await JSON.parse(localStorage.getItem('loginData'));
-        const res = await fetch('/api/user/update/', {
+        const res = await fetch(link+'/api/user/update/', {
                         method: 'POST',
                         body: JSON.stringify({
                             email: obj.email,
@@ -173,4 +175,4 @@ class ListedBookings extends Component{
 
 }
 
-export default ListedBookings;
+export default withRouter(ListedBookings);

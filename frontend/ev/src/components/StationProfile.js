@@ -3,11 +3,11 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { useHistory } from "react-router-dom";
-import { RiChargingPileFill } from "react-icons/ri";
-import { HiOutlineLocationMarker } from "react-icons/hi";
-import { FiPhoneCall } from "react-icons/fi";
+// import { RiChargingPileFill } from "react-icons/ri";
+// import { HiOutlineLocationMarker } from "react-icons/hi";
+// import { FiPhoneCall } from "react-icons/fi";
 import './StationProfile.css';
-import { HiOutlineMailOpen } from "react-icons/hi";
+// import { HiOutlineMailOpen } from "react-icons/hi";
 // HiOutlineMailOpen
 function StationProfile(){
     const d = JSON.parse(localStorage.getItem('StationData'));

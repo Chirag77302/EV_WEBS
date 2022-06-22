@@ -1,14 +1,17 @@
 import React from "react";
 import '/node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { Form, Button } from 'react-bootstrap';
-import Menu from "./SelectorMenu";
+// import Menu from "./SelectorMenu";
 import { useHistory } from 'react-router-dom';
 import { useState } from "react";
-import PhoneInput from 'react-phone-input-2'
+// import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
+
+
+const link = process.env.REACT_APP_BACKEND_API;
 
 const inivals = {
     username:"",
@@ -20,13 +23,6 @@ const inivals = {
     type:"",
     phone:""
 }
-
-
-const options = [
-    { value: 'Level 1', label: 'Level 1' },
-    { value: 'Level 2', label: 'Level 2' },
-    { value: 'DC Fast', label: 'DC Fast' },
-  ];
 
 function Register(){
     const [loginData,setLoginData] = useState(
@@ -44,7 +40,7 @@ function Register(){
           e.preventDefault();
           console.log('entered register handler');
           console.log(values);
-          const res = await fetch('/api/register/', {
+          const res = await fetch(link+'/api/register/', {
             method: 'POST',
             body: JSON.stringify({
               username:values.username,

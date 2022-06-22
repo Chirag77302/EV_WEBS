@@ -2,15 +2,16 @@ import React, { Component } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './Map.css';
-import Menu from './SelectorMenu';
+// import Menu from './SelectorMenu';
 import axios from 'axios';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
-import { BiPhoneCall } from "react-icons/bi";
+// import { BiPhoneCall } from "react-icons/bi";
 import UserProfile from './UserProfile';
 
-mapboxgl.accessToken=process.env.REACT_APP_MAPBOX_TOKEN; 
+mapboxgl.accessToken='pk.eyJ1IjoiYWtzaGl0MjAwMSIsImEiOiJjbDNza24yeGswM3R6M2NyeDFsdXlyamIwIn0.l8sSd7U_JLjCQeMzHu341g'; 
+const link = process.env.REACT_APP_BACKEND_API;
 
 class Mapp extends Component{
 	// Set up states for updating map 
@@ -35,7 +36,7 @@ class Mapp extends Component{
 		})
 
 		
-		const d = await axios.get('/api/getstations/');
+		const d = await axios.get(link+'/api/getstations/');
 
 		d.data.forEach((location) => {
 			// console.log('added : ', location);

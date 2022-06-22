@@ -1,6 +1,6 @@
 import React from "react";
 import {useHistory} from 'react-router-dom';
-import { FaUserLock,FaChargingStation } from "react-icons/fa";
+// import { FaUserLock,FaChargingStation } from "react-icons/fa";
 import { FaRegUser,FaRegUserCircle } from "react-icons/fa";
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
