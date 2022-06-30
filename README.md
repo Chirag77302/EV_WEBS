@@ -17,7 +17,7 @@
 
 ![React App - Google Chrome 6_30_2022 4_14_40 PM](https://user-images.githubusercontent.com/69391451/176668652-7420bb7c-e8e3-4e25-8670-0e176329171b.png)
 
-**Confirmation for the bookings done :** 
+**Confirmation for the bookings Page :** 
 
 ![React App - Google Chrome 6_30_2022 4_14_49 PM](https://user-images.githubusercontent.com/69391451/176668695-b3a24f38-2abf-4d58-9bde-590e6ba1a309.png)
 
