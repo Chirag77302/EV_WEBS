@@ -1,3 +1,4 @@
+
 # EV-CHARGER LOCATOR
 
 - A full-stack web application used for locating the nearest **EV-Charging Stations** near you by detecting your present location
@@ -28,4 +29,13 @@
 ![React App - Google Chrome 6_30_2022 4_14_49 PM](https://user-images.githubusercontent.com/69391451/176668695-b3a24f38-2abf-4d58-9bde-590e6ba1a309.png)
 
 
+# Getting Started
 
+```
+$git clone https://github.com/Chirag77302/EV_WEBS.git
+cd backend
+npm install
+cd..
+cd frontend/ev
+npm install
+```
