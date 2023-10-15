@@ -2,12 +2,10 @@ import React, { Component } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './Map.css';
-// import Menu from './SelectorMenu';
 import axios from 'axios';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
-// import { BiPhoneCall } from "react-icons/bi";
 import UserProfile from './UserProfile';
 
 mapboxgl.accessToken='pk.eyJ1IjoiYWtzaGl0MjAwMSIsImEiOiJjbDNza24yeGswM3R6M2NyeDFsdXlyamIwIn0.l8sSd7U_JLjCQeMzHu341g'; 
@@ -23,7 +21,6 @@ class Mapp extends Component{
 			zoom: 18,
 		}
 		this.mapContainer = React.createRef();
-		// this.handleBooking = this.handleBooking.bind(this);
 	}
 
 	// Create map and lay over markers

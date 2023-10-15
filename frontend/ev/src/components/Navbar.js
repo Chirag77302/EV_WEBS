@@ -4,7 +4,6 @@ import {useHistory} from 'react-router-dom';
 function Navbr(){
 
     const history = useHistory();
-    // const history = useHistory();
     const HandleLogout = () => {
         localStorage.removeItem('loginData');
         history.push('/');

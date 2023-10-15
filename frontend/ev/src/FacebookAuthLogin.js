@@ -2,6 +2,8 @@ import React from "react";
 import FacebookLogin from 'react-facebook-login';
 import { useState } from "react";
 
+// further enhancements / future scope dummy files
+
 function FacebookAuthLogin(){
     const [loginData,setLoginData] = useState(
         localStorage.getItem('loginData')

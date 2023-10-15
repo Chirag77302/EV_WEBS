@@ -36,7 +36,7 @@ function LoginAdmin(){
         
             const data = await res.json();
             setLoginData(data);
-            console.log('data login is :',data);
+            // console.log('data login is :',data);
             localStorage.setItem('StationData', JSON.stringify(data));
 
             history.push(`/admin/${data._id}`);

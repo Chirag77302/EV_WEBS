@@ -1,11 +1,9 @@
 const express = require('express');
 if(process.env.NODE_ENV !== "production"){
-    require('dotenv').config();
+    require('dotenv').config({ path: '../.env' });
 }
   
 const mongoose = require('mongoose');
-// const dotenv = require("dotenv"); // Define the dotenv package
-// dotenv.config(); 
 const Charger = require('./models/EV_charge.js');
 const { OAuth2Client } = require('google-auth-library');
 const User = require('./models/User.js');
@@ -14,7 +12,12 @@ const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 const mapBoxToken = process.env.REACT_APP_MAPBOX_TOKEN;
 const geocoder = mbxGeocoding({accessToken:mapBoxToken});
 const UserBooks = require('./models/UserBooks.js');
-const dbUrl = 'mongodb://localhost:27017/Electric' ;
+const dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/Electric' ;
+const app = express();
+// console.log(dbUrl);
+var cors = require('cors');
+add.use(cors());
+// app.use(cors({origin: 'https://findevcharge.netlify.app'}));
 
 mongoose.connect(dbUrl, {
     useNewUrlParser: true,
@@ -26,18 +29,16 @@ mongoose.connect(dbUrl, {
   })
 
 const client = new OAuth2Client(process.env.REACT_APP_GOOGLE_CLIENT_ID);
-
-const app = express();
 app.use(express.json());
 
+// test connection
 app.get('/api/',(req,res)=>{
-    // const al = await User.find({});
     res.send('api connected');
 });
 
 // user login / register 
 app.post('/api/auth/google', async (req, res) => {
-    // console.log("req body is : ",req.body);
+    
     const { token } = req.body;
     const ticket = await client.verifyIdToken({
       idToken: token,
@@ -65,11 +66,9 @@ app.post('/api/auth/google', async (req, res) => {
     }
 });
   
-// app.post('/api/auth/facebook',async (req,res) => {
-//     console.log(req);
-// })
 
 // get the station routes.
+
 // station login
 app.post('/api/station/login',async(req,res)=>{
     const {email,password} = req.body;
@@ -114,11 +113,10 @@ app.post('/api/register/', async(req,res)=>{
             query:location,
             limit:1
         }).send();
-
         // console.log('geodata is : ', geoData.body.features[0].geometry);
 
         const foundstation = await Charger.findOne({email:email});
-        // console.log('foundstation is : ',foundstation);
+
         if(foundstation){
             res.status(400);
             throw new Error('User Email already Exists');
@@ -135,8 +133,7 @@ app.post('/api/register/', async(req,res)=>{
             geometry:geoData.body.features[0].geometry,
             phone
         })
-        // console.log(station);
-
+        
         if(station){
             // add saving scene here;
             await station.save();
@@ -159,13 +156,13 @@ app.post('/api/register/', async(req,res)=>{
         }
 });
 
+// get all stations
 app.get('/api/getstations/',async(req,res)=> {
     const dd = await Charger.find({});
-    // console.log(dd);
     res.status(201).json(dd);
 })
 
-
+// get all available & current bookings for user
 app.post('/api/user/bookings',async(req,res)=>{
 
     const {email,username} = req.body;
@@ -179,7 +176,6 @@ app.post('/api/user/bookings',async(req,res)=>{
             // console.log('chargers is : ',cs);
             let avail = [];
             let non_avail = [];
-            // console.log( user.bookings );
             if(user.bookings.length === 0){
                 for(var i=0;i<cs.length;i++){
                     if(cs[i].slots < cs[i].maxSlots){
@@ -191,17 +187,14 @@ app.post('/api/user/bookings',async(req,res)=>{
                
                 for(var i=0;i<user.bookings.length;i++){
                     var z = user.bookings[i];
-                    // console.log('book id is : ', z._id);
+                    
                     var book = await UserBooks.findOne({_id:z._id});             
-                    // console.log('booking is : ',book);
                     var st = await Charger.findOne({_id:book.station_id});
-                    // console.log('station is : ',st);
-    
+                    
                     if(non_avail)non_avail = [...non_avail,st];
                     else non_avail = [st];
                 }
 
-                // console.log('size of not_avail: ',non_avail.length);
                 for(var i=0;i<cs.length;i++){
                     console.log('station is : ',cs[i], ' includes status : ',non_avail.includes(cs[i]) );
                     var inc = false;
@@ -217,9 +210,6 @@ app.post('/api/user/bookings',async(req,res)=>{
                 }
 
             }
-
-            // console.log('avail is : ', avail);
-            // console.log('non_avail is : ', non_avail);
             
             res.status(201).json({
                 available:[...avail],
@@ -231,6 +221,7 @@ app.post('/api/user/bookings',async(req,res)=>{
         }
 })
 
+// create a booking for a user
 app.post('/api/user/update/',async(req,res) => {
     const {email,id_extract} = req.body;
     const user = await User.findOne({email:email});
@@ -244,13 +235,10 @@ app.post('/api/user/update/',async(req,res) => {
             Accept:false,
             Decline:false
         });
-        // console.log(user.bookings);
         
-        if(user.bookings){
-            user.bookings.push(new_entry);
-        }else{
-            user.bookings = [new_entry];
-        }
+        if(user.bookings)user.bookings.push(new_entry);
+        else user.bookings = [new_entry];
+
         // console.log('slots are:',station.slots);
         if(station.slots){
             if(station.slots<station.maxSlots){
@@ -306,8 +294,7 @@ app.post('/api/users/getbookings',async(req,res)=>{
 })
 
 
-// accept/decline 
-
+// accept/decline (confirmation) a booking
 app.post('/api/users/bookingsupdate',async(req,res) => {
     const {email,id_extract} = req.body;
     const user = await User.findOne({email:email});

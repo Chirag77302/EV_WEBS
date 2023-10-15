@@ -30,9 +30,7 @@ function UserProfile(){
 		    	<div className="d-flex justify-content-center mb-2">
                 <div>
                     <button type="button" className="btn btn-primary m-1" onClick={handleBooking} >Bookings</button>
-                    <button type="button" className="btn btn-success m-1" onClick={handleNotifications} >Notifications
-                        {/* <span className="badge bg-danger ms-2">8</span> */}
-                    </button>
+                    <button type="button" className="btn btn-success m-1" onClick={handleNotifications} >Notifications</button>
                     <button type="button" className="btn btn-danger m-1" onClick={handleLogout} >LogOut</button>
                 </div>
 		    	</div>

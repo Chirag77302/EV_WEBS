@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Container, Row,Col } from "react-bootstrap";
-// import Button from 'react-bootstrap/Button';
 import { BiPhoneCall } from "react-icons/bi";
 import './ListedBookings.css'; 
 import { TbRecharging } from "react-icons/tb";
@@ -44,17 +43,19 @@ class ListedBookings extends Component{
             await this.setState({
                 avail:[...d.available],
                 not_avail:[...d.not_available]
-            },console.log(this.state));
+            }
+            // console.log(this.state)
+            );
         }
 
     }
 
     printunav(){
-        console.log('state is : ',this.state);
+        // console.log('state is : ',this.state);
     }
 
     goPreviousPage(){
-        console.log("aa gye yahan pr");
+        // console.log("aa gye yahan pr");
         const d = JSON.parse(localStorage.getItem('loginData'));
         this.props.history.push(`/user/${d._id}`);
     }
@@ -63,10 +64,10 @@ class ListedBookings extends Component{
         
         e.preventDefault();
         let id_extract = e.target.id;
-        console.log('id extracted is : ',id_extract);
+        // console.log('id extracted is : ',id_extract);
         // console.log('state is : ',this.state.avail);
         let station_extract = await this.state.avail.filter(st => st._id === id_extract);
-        console.log("station is : ",station_extract[0]);
+        // console.log("station is : ",station_extract[0]);
     
         const obj = await JSON.parse(localStorage.getItem('loginData'));
         const res = await fetch(link+'/api/user/update/', {
@@ -80,7 +81,7 @@ class ListedBookings extends Component{
                         }
                     });
         let d = await res.json();
-        console.log(d);
+        // console.log(d);
         await this.setState({
             avail: this.state.avail.filter(st => st.email !== station_extract[0].email),
             not_avail:[...this.state.not_avail,station_extract[0]]
@@ -102,7 +103,7 @@ class ListedBookings extends Component{
                                     <h4 className="text-primary p-2"> No Stations Available </h4>
                                 </div>  : this.state.avail.map(station => {
                                     return (
-                                        <div className="card mb-3 border" style={{borderRadius:'0.75rem'}} >
+                                        <div className="card mb-3 border" style={{borderRadius:'0.75rem'}} key={station._id}>
                                             <div className="row">
                                                 <div className="col-md-3 d-flex justify-content-center align-items-center">
                                                     <MdEvStation className="m-1 border" style={{fontSize: '200px',color:"#198754"}}/>

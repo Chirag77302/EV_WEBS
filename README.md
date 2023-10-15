@@ -2,7 +2,7 @@
 
 - A full-stack web application used for locating the nearest **EV-Charging Stations** near you by detecting your present location
 - Also helps the Charging station to register themselves and the user to book a slot at the charging station. 
-- User registeration and authentication developed using **REACT GOOGLE LOGIN** and OAuth.
+- User registration and authentication developed using **REACT GOOGLE LOGIN** and OAuth.
 <br />
 
 # Features and Interfaces
@@ -110,6 +110,12 @@ Type Y and press enter to start running the front-end (PORT ```3001```)
 Server already running on port 3000
 Start on a new server ? (Y/N)
 ```
+
+## Note
+
+The ```FaceBookAuthLogin.js``` file stores the implementation code for authentication using Facebook. 
+One can use it accordingly to have a facebook authentication, I personally didn't feel the need to add it later on, hence removed it from 
+the final code. 
 
 ## Need help?
 
