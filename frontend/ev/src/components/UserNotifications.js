@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Container, Row, Col } from "react-bootstrap";
-// import Button from 'react-bootstrap/Button';
 import { BiPhoneCall } from "react-icons/bi";
 import './ListedBookings.css'; 
 import { TbRecharging } from "react-icons/tb";

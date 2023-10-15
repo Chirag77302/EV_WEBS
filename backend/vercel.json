@@ -1,0 +1,23 @@
+{
+    "builds": [
+      {
+        "src": "src/index.js",
+        "use": "@vercel/node"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "src/index.js"
+      }
+    ],
+    "env": {
+        "REACT_APP_GOOGLE_CLIENT_ID":"193154118390-0tbj6g6im027365sms3e2q65hnip8n5t.apps.googleusercontent.com",
+        "REACT_APP_GOOGLE_CLIENT_SECRET":"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",
+        "REACT_APP_FACEBOOK_APP_ID":"787718955500504",
+        "REACT_APP_JSON_WEB_T":"himmat hai to todkr dikhao",
+        "REACT_APP_MAPBOX_TOKEN":"pk.eyJ1IjoiY2hpcmFnamluZGFsNyIsImEiOiJja2phNGhqcHA3N3dpMnNsYjMybWtlZWtlIn0.6izhcHV_iF70sbzxzoE0LQ",
+        "JWT_COOKIE_EXPIRES_IN":"90",
+        "DB_URL":"mongodb+srv://our_first_user:zDaP0bJvvLGNilH8@cluster0.dadbd.mongodb.net/<electric>?retryWrites=true&w=majority"
+    }
+  }

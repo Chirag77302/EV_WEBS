@@ -1,10 +1,8 @@
 import React from "react";
 import '/node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { Form, Button } from 'react-bootstrap';
-// import Menu from "./SelectorMenu";
 import { useHistory } from 'react-router-dom';
 import { useState } from "react";
-// import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -56,6 +54,7 @@ function Register(){
                 'Content-Type': 'application/json',
               }
           });
+
           console.log(res);
           console.log('ended fetch request');
           const data = await res.json();
